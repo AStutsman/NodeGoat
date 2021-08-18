@@ -6,14 +6,14 @@ pipeline {
     agent any
 
     environment {
-        Sonatype_App_Name = 'NodeGoat-Jenkins'      // App Name in the Lifecycle Platform
-        Sonatype_IQ_Server = 'https://jmn-iq-server.ngrok.io'
+        Sonatype_App_Name = 'NodeGoat'      // App Name in the Lifecycle Platform
+        Sonatype_IQ_Server = 'https://astuts.ngrok.io'
     }
 
     // this is optional on Linux, if jenkins does not have access to your locally installed docker
     //tools {
         // these match up with 'Manage Jenkins -> Global Tool Config'
-        //'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'docker-latest' 
+        //'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'docker-latest'
     //}
 
     options {
@@ -50,17 +50,17 @@ pipeline {
                         }
                         else {
                             bat 'npm --version'
-                            bat 'npm install'  
+                            bat 'npm install'
                         }
                     }
 
                 }
             }
         }
-        
+
         stage ('OSS Scan') {
             steps {
-                withCredentials([ usernamePassword ( 
+                withCredentials([ usernamePassword (
                     credentialsId: 'IQ_login', usernameVariable: 'IQ_User', passwordVariable: 'IQ_Key') ]) {
                 sh '''
                 echo "Beginning Sonatype OSS Scan"
@@ -82,10 +82,10 @@ pipeline {
                 ansiColor('xterm') {
                     sh 'docker build -t nodegoat:${BUILD_TAG} .'
                 }
-                
+
                 // split into separate stage??
                 echo 'Deploying ...'
-        
+
             }
         }
     }
